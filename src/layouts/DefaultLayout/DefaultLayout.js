@@ -17,9 +17,9 @@ class DeafultLayout extends Component{
             <div id="DefaultLayout">
             <HeadNav match={this.props.match} location={this.props.location} history={this.props.history} />
             <div className="content-wrap" style={{top:'50px',position:'relative'}}>
-                <Route  path={"/"} component={Home}  exact/>
+                <Route  path={"/"} component={Article}  exact/>
                 <Route  path={"/about"} component={About}  />
-                <Route  path={"/article"} component={Article}  />
+                <Route  path={"/article"} component={Home}  />
                 <Route  path={"/resource"} component={Resource}  />
             </div>
         </div>

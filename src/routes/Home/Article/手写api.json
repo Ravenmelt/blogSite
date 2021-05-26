@@ -1,1 +1,87 @@
-{ "name":"Bill Gates", "age":62, "car":null }
+{ 
+    "content":[{
+        "type":0,
+        "text":"先把代码抄上去，之后再补解析"
+    },{
+        "type":0,
+        "text":"先是经典的节流防抖"
+    },{
+        "type":1,
+        "text":[
+            "//节流",
+            "function throttle(fn, delay) {",
+            "\u00A0\u00A0\u00A0\u00A0var lastTime = 0;",
+            "\u00A0\u00A0\u00A0\u00A0return function() {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0var nowTime = Date.now();",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0if (nowTime - lastTime > delay) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0fn.call(this);",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0lastTime = nowTime;",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0}",
+            "\u00A0\u00A0\u00A0\u00A0}",
+            "}"
+        ]
+    },{
+        "type":1,
+        "text":[
+            "//防抖",
+            "function debounce(fn, delay) {",
+            "\u00A0\u00A0\u00A0\u00A0var timer = null;",
+            "\u00A0\u00A0\u00A0\u00A0return function() {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0clearTimeout(timer)",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0timer = setTimeout(function() {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0fn.apply(this)",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0}, delay)",
+            "\u00A0\u00A0\u00A0\u00A0}",
+            "}"
+        ]
+    },{
+        "type":0,
+        "text":"深克隆也没啥好讲的，就是判断对象类型，调用具体的方式复制，然后数组、对象用递归去做"
+    },{
+        "type":1,
+        "text":[
+            "class DeepClone {",
+            "\u00A0\u00A0\u00A0\u00A0constructor() {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0this.cacheList = [];",
+            "\u00A0\u00A0\u00A0\u00A0}",
+            "\u00A0\u00A0\u00A0\u00A0clone(source) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0if (source instanceof Object) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0const cache = this.findCache(source);",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0if (cache) return cache; ",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0else {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0let target;",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0if (source instanceof Array) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0target = new Array();",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0} else if (source instanceof Function) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0target = function () {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0return source.apply(this, arguments);",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0};",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0} else if (source instanceof Date) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0target = new Date(source);",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0} else if (source instanceof RegExp) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0target = new RegExp(source.source, source.flags);",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0}",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0his.cacheList.push([source, target]);",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0for (let key in source) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0target[key] = this.clone(source[key]);",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0}",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0return target;",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0}",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0}",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0return source;",
+            "\u00A0\u00A0\u00A0\u00A0}",
+            "\u00A0\u00A0\u00A0\u00A0findCache(source) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0for (let i = 0; i < this.cacheList.length; ++i) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0if (this.cacheList[i][0] === source) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0return this.cacheList[i][1];",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0}",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0}",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0return undefined;",
+            "\u00A0\u00A0\u00A0\u00A0}",
+            "}"
+        ]
+    },{
+        "type":0,
+        "text":"New的实现第一点复制原型链，如果是对象的话调用对象的构造函数，如果不是的话直接返回this"
+    }]
+}
