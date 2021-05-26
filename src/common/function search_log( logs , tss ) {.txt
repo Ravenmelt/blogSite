@@ -1,0 +1,26 @@
+function search_log( logs ,  tss ) {
+    // write code here
+    
+    var stack=[]
+    var temp=[]
+    tss.forEach((x)=>{
+        for(var i in logs){
+            if(x>logs[i][0]){
+                if(x<logs[i][1]){
+                    temp.push(i)
+                }
+            }
+        }
+        console.log(temp)
+        stack.push(temp)
+        console.log(stack)
+        temp.length=0
+    })
+    return stack
+}
+
+var ans=search_log( [[1610000000000,1620000000000], [1610000000000,1610000001000], [1615000000000,1620000000000]],[1610000002000,1616000000000,1630000000000] )
+//console.log(ans)
+
+
+
