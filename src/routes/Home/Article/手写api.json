@@ -83,5 +83,68 @@
     },{
         "type":0,
         "text":"New的实现第一点复制原型链，如果是对象的话调用对象的构造函数，如果不是的话直接返回this"
+    },{
+        "type":1,
+        "text":[
+            "function myNew(Func, ...args) {",
+            "\u00A0\u00A0\u00A0\u00A0const instance = {};",
+            "\u00A0\u00A0\u00A0\u00A0if (Func.prototype) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Object.setPrototypeOf(instance, Func.prototype)",
+            "\u00A0\u00A0\u00A0\u00A0}",
+            "\u00A0\u00A0\u00A0\u00A0const res = Func.apply(instance, args)",
+            "\u00A0\u00A0\u00A0\u00A0if (typeof res === \"function\" || (typeof res === \"object\" && res !== null)) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0return res",
+            "\u00A0\u00A0\u00A0\u00A0}",
+            "\u00A0\u00A0\u00A0\u00A0return instance",
+            "}"
+        ]
+    },{
+        "type":0,
+        "text":"bind call apply修改this指向的三兄弟。需要注意的是bind本身不调用函数，所以需要返回一个函数。还要注意用new方法创建的问题。"
+    },{
+        "type":1,
+        "text":[
+            "Function.prototype.myBind = function (context = globalThis) {",
+            "  const fn = this",
+            "  const args = Array.from(arguments).slice(1)",
+            "  const newFunc = function () {",
+            "    const newArgs = args.concat(...arguments)",
+            "    if (this instanceof newFunc) {",
+            "      fn.apply(this, newArgs)",
+            "    } else {",
+            "      fn.apply(context, newArgs)",
+            "    }",
+            "  }",
+            "  newFunc.prototype = Object.create(fn.prototype)",
+            "  return newFunc",
+            "}"
+        ]
+    },{
+        "type":1,
+        "text":[
+            "Function.prototype.myCall = function (context = globalThis) {",
+            "  const key = Symbol('key')",
+            "  context[key] = this",
+            "  let args = [].slice.call(arguments, 1)",
+            "  let res = context[key](...args)",
+            "  delete context[key]",
+            "  return res",
+            "};"
+        ]
+    },{
+        "type" : 1,
+        "text" : [
+            "Function.prototype.myApply = function (context = globalThis) {",
+            "  const key = Symbol('key')",
+            "  context[key] = this",
+            "  if (arguments[1]) {",
+            "    res = context[key](...arguments[1])",
+            "  } else {",
+            "    res = context[key]()",
+            "  }",
+            "  delete context[key]",
+            "  return res",
+            "};"
+         ]
     }]
 }

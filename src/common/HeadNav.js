@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import {Menu} from 'antd'
 import {Link} from 'react-router-dom'
-import {GoldOutlined} from '@ant-design/icons';
+import {ManOutlined } from '@ant-design/icons';
 import './HeadNav.less'
 export default class HeadNav extends Component {
     constructor(props){
@@ -23,7 +23,7 @@ export default class HeadNav extends Component {
             <div id="HeadNav">
                 <div className="nav-wrap">
                     <div className="nav-logo-wrap">
-                        <GoldOutlined className="nav-logo" />
+                        <ManOutlined  className="nav-logo" />
                     </div>
                     <div className="nav-list-wrap">
                         <Menu

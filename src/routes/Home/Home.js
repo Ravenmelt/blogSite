@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {  Layout, Menu  } from 'antd';
+import {  BackTop, Layout, Menu  } from 'antd';
 import {  UserOutlined  } from '@ant-design/icons';
 import Article from './Content'
 import FirstLevelMenu from './FirstMenu'
@@ -20,7 +20,7 @@ class Home extends Component{
             index:1,
             items:[
             {title:"flex布局",index:'sub1'},
-            {title:"Promise研究",index:'sub2'},
+            {title:"Promise和Async函数",index:'sub2'},
             {title:"手写api",index:'sub3'}]
         },{
             title:"React框架学习",
@@ -38,7 +38,6 @@ class Home extends Component{
     })
     }
     linkToArticle(title){
-        console.log(title);
         this.setState({content:title})
     }
     render(){
@@ -92,7 +91,9 @@ class Home extends Component{
                             left:'200px',
                             right:0,
                             overflow:'scroll',
-                            height:'100%'
+                            height:'100%',
+                            backgroundColor:'white'
+                            
                         }}
                         >
                         <Article title={this.state.content}/>

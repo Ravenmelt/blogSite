@@ -3,8 +3,8 @@ import HeadNav from '../../common/HeadNav'
 class Resource extends Component{
     render(){
         return(
-            <div>
-                <div id="2">Resource</div>
+            <div style={{backgroundColor:"white",height:'100vh'}}>
+                <div id="2">正在施工</div>
             </div>
             
         )

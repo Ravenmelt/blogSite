@@ -1,0 +1,81 @@
+{
+    "content":[{
+        "type":0,
+        "text":"flex弹性盒子可以很好的实现流式布局，实现响应式的网页。"
+    },{
+        "type":0,
+        "text":"当一个元素采用display:flex后，这个元素就被称为flex container，里面的所有元素都会采用弹性布局。"
+    },{
+        "type":0,
+        "text":"flex container有下面这些属性："
+    },{
+        "type":0,
+        "text":"flex-direction属性决定主轴的方向（即项目的排列方向）。"
+    },{
+        "type":1,
+        "text":["flex-direction: row | row-reverse | column | column-reverse;"]
+    },{
+        "type":0,
+        "text":"flex-wrap属性定义，如果一条轴线排不下，如何换行。"
+    },{
+        "type":1,
+        "text":["flex-wrap: nowrap | wrap | wrap-reverse;"]
+    },{
+        "type":0,
+        "text":"flex-flow属性是flex-direction属性和flex-wrap属性的简写形式，默认值为row nowrap。"
+    },{
+        "type":1,
+        "text":["flex-flow: <flex-direction> || <flex-wrap>;"]
+    },{
+        "type":0,
+        "text":"justify-content属性定义了项目在主轴上的对齐方式。"
+    },{
+        "type":1,
+        "text":["justify-content: flex-start | flex-end | center | space-between | space-around;"]
+    },{
+        "type":0,
+        "text":"align-items属性定义项目在交叉轴上如何对齐。"
+    },{
+        "type":1,
+        "text":["align-items: flex-start | flex-end | center | baseline | stretch;"]
+    },{
+        "type":0,
+        "text":"下面的属性是规定元素显示的属性"
+    },{
+        "type":0,
+        "text":"order属性定义项目的排列顺序。"
+    },{
+        "type":1,
+        "text":["order: <integer>;"]
+    },{
+        "type":0,
+        "text":"flex-grow属性定义项目的放大比例，默认为0，即如果存在剩余空间，也不放大。"
+    },{
+        "type":1,
+        "text":["flex-grow: <number>; "]
+    },{
+        "type":0,
+        "text":"flex-shrink属性定义了项目的缩小比例，默认为1，即如果空间不足，该项目将缩小。"
+    },{
+        "type":1,
+        "text":["flex-shrink: <number>; "]
+    },{
+        "type":0,
+        "text":"flex-basis属性定义了在分配多余空间之前，项目占据的主轴空间（main size）。"
+    },{
+        "type":1,
+        "text":["flex-basis: <length> | auto; "]
+    },{
+        "type":0,
+        "text":"flex属性是flex-grow, flex-shrink 和 flex-basis的简写，默认值为0 1 auto"
+    },{
+        "type":1,
+        "text":["flex: none | [ <'flex-grow'> <'flex-shrink'>? || <'flex-basis'> ]"]
+    },{
+        "type":0,
+        "text":"align-self属性允许单个项目有与其他项目不一样的对齐方式，可覆盖align-items属性。默认值为auto，表示继承父元素的align-items属性，如果没有父元素，则等同于stretch。"
+    },{
+        "type":1,
+        "text":["align-self: auto | flex-start | flex-end | center | baseline | stretch;"]
+    }]
+}
