@@ -40,9 +40,9 @@ export default class HeadNav extends Component {
                             <Menu.Item key="article">
                                 <Link to="/article">文章分享</Link>
                             </Menu.Item>
-                            <Menu.Item key="resource" >
+                            {/* <Menu.Item key="resource" >
                                 <Link to="/resource">资源共享</Link>
-                            </Menu.Item>
+                            </Menu.Item> */}
                         </Menu>
                     </div>
                 </div>

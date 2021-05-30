@@ -6,7 +6,7 @@ import 手写api from'./Article/手写api.json'
 import 个人站搭建小记 from'./Article/个人站搭建小记.json'
 import flex布局 from'./Article/flex布局.json'
 import Promise和Async函数 from'./Article/Promise和Async函数.json'
-
+import useEffect的源码研究 from'./Article/useEffect的源码研究.json'
 function Article(props){
     var content
     console.log(props.title);
@@ -21,8 +21,11 @@ function Article(props){
             content=flex布局.content
             break;
         case "Promise和Async函数":
-                content=Promise和Async函数.content
-                break;        
+            content=Promise和Async函数.content
+            break;        
+        case "useEffect的源码研究":
+            content=useEffect的源码研究.content
+            break;   
         default:
             content=null
             break;

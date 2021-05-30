@@ -2,5 +2,132 @@
     "content":[{
         "type":0,
         "text":"Web 页面的单线程架构决定了异步回调，而回调太多嵌套则容易产生回调地狱。下面的任务依赖上个任务的请求结果，并在上个任务的回调函数内部执行新的业务逻辑，这样当嵌套层次多了之后，代码的可读性就变得非常差了。"
+    },{
+        "type":0,
+        "text":"而Promise的作用除了消灭嵌套地狱外，还使得回调过程中产生的错误能统一的处理，进一步的降低代码的耦合程度。"
+    },{
+        "type":0,
+        "text":"产生嵌套函数的一个主要原因是在发起任务请求时会带上回调函数，这样当任务处理结束之后，下个任务就只能在回调函数中来处理了。首先，Promise 实现了回调函数的延时绑定。回调函数的延时绑定在代码上体现就是先创建 Promise 对象 x1，通过 Promise 的构造函数 executor 来执行业务逻辑；创建好 Promise 对象 x1 之后，再使用 x1.then 来设置回调函数。其次，需要将回调函数 onResolve 的返回值穿透到最外层。因为我们会根据 onResolve 函数的传入值来决定创建什么类型的 Promise 任务，创建好的 Promise 对象需要返回到最外层，这样就可以摆脱嵌套循环了。"
+    },{
+        "type":0,
+        "text":"还有个重要技术手段就是回调函数通过then延迟绑定，而不是直接声明的。"
+    },{
+        "type":0,
+        "text":"下面展示一个建议的promise的源码"
+    },{
+        "type":1,
+        "text":[
+            "class MyPromise {",
+            "\u00A0\u00A0\u00A0\u00A0constructor(func) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0this.status = 'pending'",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0this.value = null",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0this.resolvedTasks = []",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0this.rejectedTasks = []",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0this._resolve = this._resolve.bind(this)",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0this._reject = this._reject.bind(this)",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0try {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0func(this._resolve, this._reject)",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0} catch (error) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0this._reject(error)",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0}",
+            "\u00A0\u00A0\u00A0\u00A0}",
+            "\u00A0\u00A0\u00A0\u00A0",
+            "\u00A0\u00A0\u00A0\u00A0_resolve(value) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0setTimeout(() => {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0this.status = 'fulfilled'",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0this.value = value",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0this.resolvedTasks.forEach(t => t(value))",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0})",
+            "\u00A0\u00A0\u00A0\u00A0}",
+            "\u00A0\u00A0\u00A0\u00A0",
+            "\u00A0\u00A0\u00A0\u00A0_reject(reason) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0setTimeout(() => {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0this.status = 'reject'",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0this.value = reason",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0this.rejectedTasks.forEach(t => t(reason))",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0})",
+            "\u00A0\u00A0\u00A0\u00A0}",
+            "\u00A0\u00A0\u00A0\u00A0",
+            "\u00A0\u00A0\u00A0\u00A0then(onFulfilled, onRejected) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0return new MyPromise((resolve, reject) => {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0this.resolvedTasks.push((value) => {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0try {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0const res = onFulfilled(value)",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0if (res instanceof MyPromise) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0res.then(resolve, reject)",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0} else {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0resolve(res)",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0}",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0} catch (error) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0reject(error)",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0}",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0})",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0this.rejectedTasks.push((value) => {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0try {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0const res = onRejected(value)",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0if (res instanceof MyPromise) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0res.then(resolve, reject)",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0} else {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0reject(res)",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0}",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0} catch (error) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0reject(error)",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0}",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0})",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0})",
+            "\u00A0\u00A0\u00A0\u00A0",
+            "\u00A0\u00A0\u00A0\u00A0",
+            "\u00A0\u00A0\u00A0\u00A0catch(onRejected) {",
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0return this.then(null, onRejected);",
+            "\u00A0\u00A0\u00A0\u00A0}",
+            "  }"
+        ]
+    },{
+        "type":0,
+        "text":"Promise来支持异步的方法我们可以参考发布订阅模式，在执行then方法的时候，如果当前还是PENDING状态，就把回调函数寄存到一个数组中，当状态发生改变时，去数组中取出回调函数。这样就不会导致pending状态下执行then的函数，导致这个函数内容被放弃执行。"
+    },{
+        "type":0,
+        "text":""
+    },{
+        "type":0,
+        "text":"接下来将async函数前我想先讲讲生成器的工作方法。因为async能用同步的形式实现异步操作，本质上也是promise+协程的"
+    },{
+        "type":0,
+        "text":"我们先来看看什么是生成器函数?"
+    },{
+        "type":0,
+        "text":"生成器函数是一个带星号函数，而且是可以暂停执行和恢复执行的。在生成器函数内部如果遇到 yield 关键字，那么 JavaScript 引擎将返回关键字后面的内容给外部，并暂停该函数的执行。外部函数可以通过 next 方法恢复函数的执行。"
+    },{
+        "type":0,
+        "text":"gen 协程和父协程是在主线程上交互执行的，并不是并发执行的，它们之前的切换是通过 yield 和 gen.next 来配合完成的。"
+    },{
+        "type":0,
+        "text":"而async本质上也是一个隐式返回promise的生成器函数，下面给一段实例代码展示js引擎是如何在协程之间进行通信的。"
+    },{
+        "type":1,
+        "text":[
+            "",
+            "async function foo() {",
+            "\u00A0\u00A0\u00A0\u00A0console.log(1)",
+            "\u00A0\u00A0\u00A0\u00A0let a = await 100",
+            "\u00A0\u00A0\u00A0\u00A0console.log(a)",
+            "\u00A0\u00A0\u00A0\u00A0console.log(2)",
+            "}",
+            "console.log(0)",
+            "foo()",
+            "console.log(3)"
+        ]
+    },{
+        "type":2,
+        "text":"8dcd8cfa77d43d1fb928d8b001229b94.png"
+    },{
+        "type":0,
+        "text":"当然async解决了一部分异步代码编写的问题，但还是留有很多缺陷。例如如果子函数为async函数的话，，父函数也会是async函数。十分的增加心智上的负担。这也是react的fiber抛弃了生成器函数和async，转而自己开发一套新的库来解决异步中断fiber渲染的问题。"
+    },{
+        "type":0,
+        "text":""
+    },{
+        "type":0,
+        "text":""
     }]
 }

@@ -26,13 +26,14 @@ class Home extends Component{
             title:"React框架学习",
             index:2,
             items:[
-            {title:"个人站搭建小记",index:'sub4'},
-            {title:"useEffect的源码研究",index:'sub5'}]
-        },{
-            title:"Vue框架学习",
-            index:3,
-            items:[
-            {title:"双向绑定",index:'sub6'},]
+            {title:"个人站搭建小记",index:'sub4'}]
+            // ,
+            // {title:"useEffect的源码研究",index:'sub5'}]
+        // },{
+        //     title:"Vue框架学习",
+        //     index:3,
+        //     items:[
+        //     {title:"双向绑定",index:'sub6'},]
         }],
         content:"个人站搭建小记"
     })
